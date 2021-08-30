@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArgsType, Field } from '@nestjs/graphql';
 import { IsBoolean, IsString, Length } from 'class-validator';
 
