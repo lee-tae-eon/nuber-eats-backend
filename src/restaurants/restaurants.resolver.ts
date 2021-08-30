@@ -1,10 +1,10 @@
-import { Resolver, Query, Field } from '@nestjs/graphql';
+import { Resolver, Query, Field, Args } from '@nestjs/graphql';
 import { Restaurant } from './entities/restaurant.entity';
 
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
-  @Query((returns) => Restaurant)
-  restaurants(): Restaurant[] {
+  @Query((returns) => [Restaurant])
+  restaurants(@Args('veganOnly') veganOnly: boolean): Restaurant[] {
     return [];
   }
 }
