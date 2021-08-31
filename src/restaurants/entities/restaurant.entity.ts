@@ -24,4 +24,8 @@ export class Restaurant {
   @Field((type) => String)
   @Column()
   ownerName: string;
+
+  @Field((type) => String)
+  @Column()
+  categoryName: string;
 }
