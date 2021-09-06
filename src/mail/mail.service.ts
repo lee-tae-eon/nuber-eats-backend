@@ -14,11 +14,11 @@ export class MailService {
   private async sendEmail(subject: string, content: string) {
     const form = new FormData();
     form.append('from', `Excited User <mailgun@${this.options.domain}>`);
-    form.append('to', `eongon@naver.com`);
+    form.append('to', `ltaeeon@gmail.com`);
     form.append('subject', subject);
     form.append('text', content);
     const response = await got(
-      `https://api.mailgun.net/v3/${this.options.domain}/messages`,
+      `https://api.mailgun.net/v3/${this.options.domain}/message`,
       {
         method: 'POST',
         headers: {
@@ -29,6 +29,6 @@ export class MailService {
         body: form,
       },
     );
-    console.log(response.body);
+    console.log(response);
   }
 }
