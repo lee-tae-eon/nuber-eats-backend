@@ -67,7 +67,7 @@ export class UsersService {
           error: 'password가 올바르지 않습니다.',
         };
       }
-      console.log(user);
+
       const token = this.jwtService.sign(user.id);
       return {
         ok: true,
@@ -76,20 +76,19 @@ export class UsersService {
     } catch (error) {
       return {
         ok: false,
-        error,
+        error: "can't log user in",
       };
     }
   }
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({ id });
-      if (user) {
-        return {
-          ok: true,
-          user: user,
-        };
-      }
+      const user = await this.users.findOneOrFail({ id });
+
+      return {
+        ok: true,
+        user: user,
+      };
     } catch (error) {
       return { ok: false, error: 'user not Found' };
     }
