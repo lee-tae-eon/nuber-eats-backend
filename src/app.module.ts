@@ -17,7 +17,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { User } from './users/entities/user.entity';
 import { Verification } from './users/entities/verification.entity';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
-import { Category } from './restaurants/entities/category.entitiy';
+import { Category } from './restaurants/entities/category.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Category } from './category.entitiy';
+import { Category } from './category.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @InputType('RestaurantInputType', { isAbstract: true })
@@ -14,6 +14,7 @@ export class Restaurant extends CoreEntity {
   @Field((type) => String)
   @Column()
   @IsString()
+  @Length(5)
   name: string;
 
   @Field((type) => String)
@@ -33,7 +34,7 @@ export class Restaurant extends CoreEntity {
   })
   category: Category;
 
-  @Field((type) => User, { nullable: true })
+  @Field((type) => User)
   @ManyToOne((type) => User, (user) => user.restaurants, {
     nullable: true,
     onDelete: 'SET NULL',

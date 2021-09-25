@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Args, Mutation } from '@nestjs/graphql';
+import { AuthUser } from 'src/auth/auth-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
@@ -13,14 +15,12 @@ export class RestaurantsResolver {
 
   @Mutation((returns) => CreateRestaurantOutput)
   async createRestaurant(
+    @AuthUser() authUser: User,
     @Args('input') createRestaurantInput: CreateRestaurantInput,
-  ): Promise<boolean> {
-    try {
-      await this.restaurantService.createRestaurant(createRestaurantInput);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
+  ): Promise<CreateRestaurantOutput> {
+    return this.restaurantService.createRestaurant(
+      authUser,
+      createRestaurantInput,
+    );
   }
 }

@@ -28,8 +28,8 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Field((type) => String)
   @Column({ select: false })
+  @Field((type) => String)
   @IsString()
   password: string;
 
@@ -64,6 +64,7 @@ export class User extends CoreEntity {
       const ok = await bcrypt.compare(aPassword, this.password);
       return ok;
     } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }
