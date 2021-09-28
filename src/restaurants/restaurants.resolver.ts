@@ -14,7 +14,7 @@ import { RestaurantService } from './restaurants.service';
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
-  @Role('Owner');
+  @Role(['Any'])
   @Mutation((returns) => CreateRestaurantOutput)
   async createRestaurant(
     @AuthUser() authUser: User,
