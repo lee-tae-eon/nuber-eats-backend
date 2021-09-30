@@ -8,14 +8,19 @@ import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
 } from './dtos/create-restaurant.dto';
+import {
+  EditRestaurantInput,
+  EditRestaurantOutput,
+} from './dtos/edit-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantService } from './restaurants.service';
 
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
-  @Role(['Owner'])
+
   @Mutation((returns) => CreateRestaurantOutput)
+  @Role(['Owner'])
   async createRestaurant(
     @AuthUser() authUser: User,
     @Args('input') createRestaurantInput: CreateRestaurantInput,
@@ -24,5 +29,14 @@ export class RestaurantsResolver {
       authUser,
       createRestaurantInput,
     );
+  }
+
+  @Mutation((returns) => EditRestaurantOutput)
+  @Role(['Owner'])
+  editRestaunrant(
+    @AuthUser() authUser: User,
+    @Args('input') editRestaunrantInput: EditRestaurantInput,
+  ): EditRestaurantOutput {
+    return { ok: true };
   }
 }
