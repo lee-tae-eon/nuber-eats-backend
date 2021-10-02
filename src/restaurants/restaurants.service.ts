@@ -32,6 +32,7 @@ export class RestaurantService {
         this.categories.create({ slug: categorySlug, name: categoryName }),
       );
     }
+    return category;
   }
 
   async createRestaurant(
@@ -44,6 +45,7 @@ export class RestaurantService {
       const category = await this.getOrCreateCategory(
         createRestaurantInput.categoryName,
       );
+      // this.categories.getOrCreate();
       newRestaurant.category = category;
       await this.restaurants.save(newRestaurant);
       return {
