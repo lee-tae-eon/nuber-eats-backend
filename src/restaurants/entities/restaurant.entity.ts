@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString, Length } from 'class-validator';
 
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Category } from './category.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -22,7 +21,7 @@ export class Restaurant extends CoreEntity {
   @IsString()
   coverImg: string;
 
-  @Field((type) => String, { defaultValue: '강남' })
+  @Field((type) => String)
   @Column()
   @IsString()
   address: string;

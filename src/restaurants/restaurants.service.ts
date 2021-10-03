@@ -23,18 +23,6 @@ export class RestaurantService {
     private readonly categories: CategoryRepositry,
   ) {}
 
-  async getOrCreate(name: string): Promise<Category> {
-    const categoryName = name.trim().toLowerCase();
-    const categorySlug = categoryName.replace(/ /g, '-');
-    let category = await this.categories.findOne({ slug: categorySlug });
-    if (!category) {
-      category = await this.categories.save(
-        this.categories.create({ slug: categorySlug, name: categoryName }),
-      );
-    }
-    return category;
-  }
-
   async createRestaurant(
     owner: User,
     createRestaurantInput: CreateRestaurantInput,
@@ -51,8 +39,7 @@ export class RestaurantService {
       return {
         ok: true,
       };
-    } catch (error) {
-      console.log(error);
+    } catch {
       return {
         ok: false,
         error: 'could not create restaurant',
@@ -64,36 +51,43 @@ export class RestaurantService {
     owner: User,
     editRestaunrantInput: EditRestaurantInput,
   ): Promise<EditRestaurantOutput> {
-    const restaurant = await this.restaurants.findOne(
-      editRestaunrantInput.restaurantId,
-    );
-    if (!restaurant) {
-      return {
-        ok: false,
-        error: '레스토랑이 없습니다.',
-      };
-    }
-    if (owner.id !== restaurant.ownerId) {
-      return {
-        ok: false,
-        error: 'you cant edit a restaurant that you dont own',
-      };
-    }
-    let category: Category = null;
-    if (editRestaunrantInput.categoryName) {
-      category = await this.categories.getOrCreate(
-        editRestaunrantInput.categoryName,
+    try {
+      const restaurant = await this.restaurants.findOne(
+        editRestaunrantInput.restaurantId,
       );
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: '레스토랑이 없습니다.',
+        };
+      }
+      if (owner.id !== restaurant.ownerId) {
+        return {
+          ok: false,
+          error: 'you cant edit a restaurant that you dont own',
+        };
+      }
+      let category: Category = null;
+      if (editRestaunrantInput.categoryName) {
+        category = await this.categories.getOrCreate(
+          editRestaunrantInput.categoryName,
+        );
+      }
+      await this.restaurants.save([
+        {
+          id: editRestaunrantInput.restaurantId,
+          ...editRestaunrantInput,
+          ...(category && { category }),
+        },
+      ]);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'could not edit Restaurant',
+      };
     }
-    await this.restaurants.save([
-      {
-        id: editRestaunrantInput.restaurantId,
-        ...editRestaunrantInput,
-        ...(category && { category }),
-      },
-    ]);
-    return {
-      ok: true,
-    };
   }
 }
