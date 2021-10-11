@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { ILike, Like, Raw, Repository } from 'typeorm';
 
 import { User } from 'src/users/entities/user.entity';
 import { Category } from './entities/category.entity';
@@ -28,6 +28,8 @@ import {
   SearchRestauratInput,
   SearchRestauratOutput,
 } from './dtos/search-restaurant.dto';
+import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
+import { PickType } from '@nestjs/graphql';
 
 @Injectable()
 export class RestaurantService {
@@ -209,7 +211,9 @@ export class RestaurantService {
     restaurantId,
   }: RestaurantInput): Promise<RestaurantOutput> {
     try {
-      const restaurant = await this.restaurants.findOne(restaurantId);
+      const restaurant = await this.restaurants.findOne(restaurantId, {
+        relations: ['menu'],
+      });
       if (!restaurant) {
         return {
           ok: false,
@@ -234,16 +238,33 @@ export class RestaurantService {
     page,
   }: SearchRestauratInput): Promise<SearchRestauratOutput> {
     try {
-      const [restaurant, totalResults] = await this.restaurants.findAndCount({
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
         where: {
-          name: Like(`%${query}%`),
+          name: Raw((name) => `${name} ILike '%${query}%'`),
         },
+        skip: (page - 1) * 25,
+        take: 25,
       });
+      return {
+        ok: true,
+        restaurants,
+        totalResults,
+        totalPages: Math.ceil(totalResults / 25),
+      };
     } catch {
       return {
         ok: false,
         error: 'could not found restaurant',
       };
     }
+  }
+
+  async createDish(
+    owner: User,
+    createDishInput: CreateDishInput,
+  ): Promise<CreateDishOutput> {
+    return {
+      ok: false,
+    };
   }
 }
