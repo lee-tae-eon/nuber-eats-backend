@@ -50,7 +50,11 @@ export class User extends CoreEntity {
 
   @Field((type) => [Order])
   @OneToMany((type) => Order, (order) => order.customer)
-  order: Order[];
+  orders: Order[];
+
+  @Field((type) => [Order])
+  @OneToMany((type) => Order, (order) => order.driver)
+  rides: Order[];
 
   @BeforeInsert()
   @BeforeUpdate()
