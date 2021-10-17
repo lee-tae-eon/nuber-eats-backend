@@ -26,5 +26,11 @@ export class OrderService {
         error: 'restaurant not found',
       };
     }
+    const order = this.orders.save(
+      this.orders.create({
+        customer,
+      }),
+    );
+    console.log(order);
   }
 }
