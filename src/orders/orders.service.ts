@@ -29,6 +29,7 @@ export class OrderService {
     const order = this.orders.save(
       this.orders.create({
         customer,
+        restaurant,
       }),
     );
     console.log(order);
