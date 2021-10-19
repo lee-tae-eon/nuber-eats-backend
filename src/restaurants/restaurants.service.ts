@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Like, Raw, Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 
 import { User } from 'src/users/entities/user.entity';
 import { Category } from './entities/category.entity';
@@ -29,7 +29,6 @@ import {
   SearchRestauratOutput,
 } from './dtos/search-restaurant.dto';
 import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
-import { PickType } from '@nestjs/graphql';
 import { Dish } from './entities/dish.entity';
 import { EditDishInput, EditDishOutput } from './dtos/edit-dish.dto';
 import { DeleteDishInput, DeleteDishOutput } from './dtos/delete-dish.dto';
