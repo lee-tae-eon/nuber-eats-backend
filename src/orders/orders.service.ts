@@ -31,7 +31,7 @@ export class OrderService {
       if (!restaurant) {
         return {
           ok: false,
-          error: 'restaurant not found',
+          error: 'Restaurant not found',
         };
       }
       let orderFinalPrice = 0;
@@ -65,7 +65,6 @@ export class OrderService {
           }
         }
         orderFinalPrice = orderFinalPrice + dishFinalPrice;
-
         const orderItem = await this.orderItems.save(
           this.orderItems.create({
             dish,
@@ -74,7 +73,7 @@ export class OrderService {
         );
         orderItems.push(orderItem);
       }
-      const order = await this.orders.save(
+      await this.orders.save(
         this.orders.create({
           customer,
           restaurant,
@@ -85,11 +84,10 @@ export class OrderService {
       return {
         ok: true,
       };
-    } catch (error) {
-      console.log(error);
+    } catch {
       return {
         ok: false,
-        error: 'could not create order',
+        error: 'Could not create order.',
       };
     }
   }
@@ -98,30 +96,40 @@ export class OrderService {
     user: User,
     { status }: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
-    if (user.role === UserRole.Client) {
-      const orders = await this.orders.find({
-        where: {
-          customer: user,
-        },
-      });
-    } else if (user.role === UserRole.Delivery) {
-      const orders = await this.orders.find({
-        where: {
-          driver: user,
-        },
-      });
-    } else if (user.role === UserRole.Owner) {
-      const orders = await this.restaurants.find({
-        where: {
-          owner: user,
-        },
-        select: ['orders'],
-        relations: ['orders'],
-      });
-      console.log(orders);
+    try {
+      let orders: Order[];
+      if (user.role === UserRole.Client) {
+        orders = await this.orders.find({
+          where: {
+            customer: user,
+          },
+        });
+      } else if (user.role === UserRole.Delivery) {
+        orders = await this.orders.find({
+          where: {
+            driver: user,
+          },
+        });
+      } else if (user.role === UserRole.Owner) {
+        const restaurants = await this.restaurants.find({
+          where: {
+            owner: user,
+          },
+          relations: ['orders'],
+        });
+        console.log(restaurants);
+        orders = restaurants.map((restaurant) => restaurant.orders).flat(1);
+        console.log(orders);
+      }
+      return {
+        ok: true,
+        orders,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not get orders',
+      };
     }
-    return {
-      ok: false,
-    };
   }
 }
