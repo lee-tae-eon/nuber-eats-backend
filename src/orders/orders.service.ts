@@ -102,12 +102,14 @@ export class OrderService {
         orders = await this.orders.find({
           where: {
             customer: user,
+            status,
           },
         });
       } else if (user.role === UserRole.Delivery) {
         orders = await this.orders.find({
           where: {
             driver: user,
+            status,
           },
         });
       } else if (user.role === UserRole.Owner) {

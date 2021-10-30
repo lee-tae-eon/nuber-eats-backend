@@ -16,7 +16,7 @@ export class MailService {
   ): Promise<boolean> {
     const form = new FormData();
     form.append('from', `Lee from Nuber Eats <mailgun@${this.options.domain}>`);
-    form.append('to', `eongon@naver.com`);
+    form.append('to', `mktears0609@gmail.com`);
     form.append('subject', subject);
     form.append('template', template);
     emailVars.forEach((eVar) => form.append(`v:${eVar.key}`, eVar.value));
