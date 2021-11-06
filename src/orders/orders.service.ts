@@ -142,7 +142,9 @@ export class OrderService {
     { id: orderId }: GetOrderInput,
   ): Promise<GetOrderOutput> {
     try {
-      const order = await this.orders.findOne(orderId);
+      const order = await this.orders.findOne(orderId, {
+        relations: ['restaurant'],
+      });
       if (!order) {
         return {
           ok: false,

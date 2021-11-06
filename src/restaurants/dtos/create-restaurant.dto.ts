@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType, PickType } from '@nestjs/graphql';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 
 import { Restaurant } from '../entities/restaurant.entity';
@@ -15,4 +15,7 @@ export class CreateRestaurantInput extends PickType(Restaurant, [
 }
 
 @ObjectType()
-export class CreateRestaurantOutput extends CoreOutput {}
+export class CreateRestaurantOutput extends CoreOutput {
+  @Field((type) => Int)
+  restaurantId?: number;
+}
