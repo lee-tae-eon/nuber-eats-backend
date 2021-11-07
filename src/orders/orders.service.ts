@@ -151,16 +151,35 @@ export class OrderService {
           error: 'Order not found',
         };
       }
+      let allowed = true;
+      if (user.role === UserRole.Client && order.customerId !== user.id) {
+        allowed = false;
+      }
+      if (user.role === UserRole.Delivery && order.driverId !== user.id) {
+        allowed = false;
+      }
       if (
-        order.customerId !== user.id &&
-        order.driverId !== user.id &&
+        user.role === UserRole.Owner &&
         order.restaurant.ownerId !== user.id
       ) {
+        allowed = false;
+      }
+      if (!allowed) {
         return {
           ok: false,
-          error: "You can't see that",
+          error: "you can't see that",
         };
       }
+      // if (
+      //   order.customerId !== user.id &&
+      //   order.driverId !== user.id &&
+      //   order.restaurant.ownerId !== user.id
+      // ) {
+      //   return {
+      //     ok: false,
+      //     error: "You can't see that",
+      //   };
+      // }
       return {
         ok: true,
         order,
