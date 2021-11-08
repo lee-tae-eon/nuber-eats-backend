@@ -64,8 +64,14 @@ import { OrderItem } from './orders/entities/order-item.entity';
       ],
     }),
     GraphQLModule.forRoot({
+      // pubsub 기능
+      installSubscriptionHandlers: true,
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({ req }) => {
+        console.log('---------------------');
+        console.log(req);
+        return { user: req['user'] };
+      },
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
