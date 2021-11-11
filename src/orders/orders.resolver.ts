@@ -60,7 +60,8 @@ export class OrderResolver {
   }
 
   @Subscription((returns) => String)
-  readySubscription() {
+  @Role(['Any'])
+  readySubscription(@AuthUser() user: User) {
     return pubsub.asyncIterator('orderSubscription');
   }
 }

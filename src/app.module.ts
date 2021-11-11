@@ -67,10 +67,13 @@ import { OrderItem } from './orders/entities/order-item.entity';
       // pubsub 기능
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
-      context: ({ req }) => {
-        console.log('---------------------');
-        console.log(req);
-        return { user: req['user'] };
+      context: ({ req, connection }) => {
+        if (req) {
+          return { headers: req.headers };
+        } else {
+          console.log(connection);
+          return { headers: 'hot' };
+        }
       },
     }),
     JwtModule.forRoot({
@@ -89,11 +92,4 @@ import { OrderItem } from './orders/entities/order-item.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.POST,
-    });
-  }
-}
+export class AppModule {}
