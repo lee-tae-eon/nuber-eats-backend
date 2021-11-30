@@ -65,6 +65,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
     }),
     GraphQLModule.forRoot({
       // pubsub 기능
+      // test commit
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       context: ({ req, connection }) => {
